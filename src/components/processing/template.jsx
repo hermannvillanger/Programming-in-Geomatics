@@ -9,6 +9,7 @@ import { OperationShape, LayerShape, InputTypes } from "../util/constants";
 import "../css/sidebar.css";
 import { validateNumberInput } from "../util/support.js";
 import infoIcon from "../../images/iconinfo.svg";
+import Popup from "reactjs-popup";
 /**
  * General setup:
  * Number of layers to take in
@@ -251,6 +252,7 @@ class ProcessingTemplate extends Component {
       this.props.onProcessingDone(layer);
     }
   };
+
   /**
    * Creates layer and inputfields based on operation specifications
    * Creates reset button and start button for processing. Start button is greyed out if
@@ -262,12 +264,17 @@ class ProcessingTemplate extends Component {
       <div className="template">
         <div onClick={() => this.props.onToggle(this.props.operation.name)}>
           {this.props.operation.name}
-          <img
-            src={infoIcon}
-            className="info-icon"
-            alt="" /*onMouseOver={/*Show image here*/
-          />
-          {/*TODO: Add info button with picture explaining this function*/}
+          <Popup
+            trigger={<img src={infoIcon} className="info-icon" alt="" />}
+            position="right top"
+            on="hover"
+          >
+            <img
+              style={{ width: "300px" }}
+              src={this.props.operation.info}
+              alt=""
+            />
+          </Popup>
         </div>
         {listOpen && (
           <div>

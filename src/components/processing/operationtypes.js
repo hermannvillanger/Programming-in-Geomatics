@@ -3,7 +3,10 @@ import { bufferScript } from "./buffer.js";
 import { intersectionScript } from "./intersection.js";
 import { unionScript } from "./union.js";
 import { differenceScript } from "./difference";
-//import Image1 from '../../images/image1'
+import bufferImg from "../../images/buffer.png";
+import intersectionImg from "../../images/intersection.png";
+import unionImg from "../../images/union.png";
+import differenceImg from "../../images/difference.png";
 
 /**
  * Array of all processing types
@@ -22,28 +25,28 @@ export const operations = [
       //createInputValue("Dissolve", true, InputTypes.boolean)
     ],
     script: bufferScript,
-    info: null //TODO: Image visualizing the operation
+    info: bufferImg
   },
   {
     name: "Intersection",
     inputLayers: 2,
     inputValues: null,
     script: intersectionScript,
-    info: null
+    info: intersectionImg
   },
   {
     name: "Union",
     inputLayers: 2,
     inputValues: null,
     script: unionScript,
-    info: null
+    info: unionImg
   },
   {
     name: "Difference",
     inputLayers: 2,
     inputValues: null,
     script: differenceScript,
-    info: null
+    info: differenceImg
   }
 ];
 
