@@ -1,19 +1,40 @@
 import React, { Component } from "react";
 
-class Extractor extends Component {
+class FeatureExtractor extends Component {
   constructor(props) {
     super(props);
     const extractors = [];
     this.state = { extractors: extractors };
   }
   onExecute = () => {
-    //Execute function
+    const data = this.props.layer.data;
+    data.features = [];
+    this.props.layer.data.features.forEach(feature => {
+      if (this.checkExtractions(feature)) {
+        data.features.add(feature);
+      }
+    });
+
+    const newName = "Name";
+    const extractedLayer = { name: newName, data: data };
+
+    this.props.onExecute(extractedLayer);
   };
+  checkExtractions = feature => {
+    let fulfill = true;
+    feature.properties.forEach(property => {
+      //TODO: Compare to all demands
+    });
+    return fulfill;
+  };
+
   onCancel = () => {
+    this.props.onClose();
     //Cancel function
   };
   addExtraction = () => {
     this.setState(prevState => {
+      return { extractors: prevState.extractors };
       //
     });
   };
@@ -24,6 +45,18 @@ class Extractor extends Component {
    * Should get suggestions for values in dropdown
    */
   createSelectFields = () => {
+    const layer = this.props.layers[0];
+    console.log(layer);
+    const categories = layer.data.features.properties;
+    categories.forEach(category => {
+      console.log(category);
+      //Each feature element:
+    });
+    /**
+     * layer.data.features.properties[0,1,....]
+     * Properties - kan brukes
+     *  Alle typer elementer i properties hentes ut, for det valgte: hent alle muligheter i de andre featurene
+     */
     //Create x number of fields. Store in state as array
   };
 
@@ -39,4 +72,4 @@ class Extractor extends Component {
   }
 }
 
-export default Extractor;
+export default FeatureExtractor;

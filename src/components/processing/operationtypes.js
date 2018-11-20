@@ -3,18 +3,22 @@ import { bufferScript } from "./buffer.js";
 import { intersectionScript } from "./intersection.js";
 import { unionScript } from "./union.js";
 import { differenceScript } from "./difference";
+
 import bufferImg from "../../images/buffer.png";
 import intersectionImg from "../../images/intersection.png";
 import unionImg from "../../images/union.png";
 import differenceImg from "../../images/difference.png";
 
+import FeatureExtractor from "./featureextractor";
+
 /**
- * Array of all processing types
+ * Array of processing operators that do not need extra user input
  * Format:
  * name: must be unique
  * inputLayers: how many layers is operates on
- * inputValues: if it need additional input(like buffer value)
- * script: which script in this folder will be executed
+ * inputValues: null if no extra input, or an array or objects describing the input
+ * script: which function will be executed
+ * info: descriptive image of the operation. An image link or null
  */
 export const operations = [
   {
@@ -49,7 +53,6 @@ export const operations = [
     info: differenceImg
   }
 ];
-
 function createInputValue(inputName, defaultInput, inputType) {
   return {
     inputName: inputName,
@@ -57,3 +60,17 @@ function createInputValue(inputName, defaultInput, inputType) {
     inputType: inputType
   };
 }
+
+/**
+ * Operations needing additional user interaction, like feature extractors.
+ * Must have a component describing the popupwindow
+ */
+export const componentOperations = [
+  {
+    name: "Feature extractor",
+    inputLayers: 1,
+    inputValues: null,
+    info: null,
+    popupComponent: FeatureExtractor
+  }
+];

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { InputTypes } from "./util/constants.js";
+//import PropTypes from "prop-types";
+//import { InputTypes } from "./util/constants.js";
 import "./css/sidebar.css";
 import { validateNumberInput } from "./util/support.js";
 /**
@@ -16,6 +16,7 @@ const InputValues = {
 class Properties extends Component {
   constructor(props) {
     super(props);
+    //Map input type to inputvalue
     const inputs = new Map([
       [InputValues.name, props.layer.name],
       [InputValues.color, props.style.color],
@@ -25,12 +26,20 @@ class Properties extends Component {
       inputs: inputs
     };
   }
+  /**
+   * How textinput should be handled. Can check if the input is valid, nonempty...
+   */
   handleTextInput = (evt, inputName, defaultValue) => {
     let newValue = evt.target.value;
     this.setState(prevState => {
       return { inputs: prevState.inputs.set(inputName, newValue) };
     });
   };
+  /**
+   * Handle numerical input with min and max value.
+   * Remove all non-numerical values from input, check if remainder is not empty.
+   * Is not empty, compare to min max, if empty set as empty string
+   */
   handleRangeInput = (evt, inputName, defaultValue, min, max) => {
     let newValue = validateNumberInput(evt.target.value, defaultValue);
     newValue =
@@ -42,7 +51,7 @@ class Properties extends Component {
     });
   };
   /**
-   * Checks if inputValue is within the constraints. If not, returns max and min values
+   * Checks if inputValue is within the constraints. If not, returns max or min values
    */
   ValidateRangeInput = (inputValue, defaultValue, min, max) => {
     if (Number(inputValue) < min) {
@@ -52,6 +61,10 @@ class Properties extends Component {
     }
     return inputValue;
   };
+  /**
+   * Calls App with changes to properties the user have entered.
+   * Validation is done in App component, we send null if the field should not be changes
+   */
   applyChanges = () => {
     this.props.onNameChange(
       this.props.layer,
@@ -65,10 +78,16 @@ class Properties extends Component {
     });
     this.removeDialogue();
   };
+  /**
+   * Call parent to close properties popup
+   */
   removeDialogue = () => {
     this.props.onDialogueFinished();
   };
-
+  /**
+   * Create the content of properties menu.
+   * Contains each property and a field for changing them in a vertial list
+   */
   createPage = () => {
     return (
       <React.Fragment>

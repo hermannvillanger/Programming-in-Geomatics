@@ -1,15 +1,17 @@
 /**
  * Created by Hermann
- * Base class which the operations extend
+ * Base class for operations in the sidebar. Creates inputfields
+ * and initiates the processing operation on the input layers
  */
 import React, { Component } from "react";
 import ProcessingField from "./processingfield";
 import PropTypes from "prop-types";
-import { OperationShape, LayerShape, InputTypes } from "../util/constants";
-import "../css/sidebar.css";
-import { validateNumberInput } from "../util/support.js";
-import infoIcon from "../../images/iconinfo.svg";
+import { OperationShape, LayerShape, InputTypes } from "./util/constants";
+import "./css/sidebar.css";
+import { validateNumberInput } from "./util/support.js";
+import infoIcon from "../images/iconinfo.svg";
 import Popup from "reactjs-popup";
+
 /**
  * General setup:
  * Number of layers to take in
@@ -19,7 +21,6 @@ import Popup from "reactjs-popup";
  * Button for emptying selection, only after finished
  * Expand drop down menu when clicked on, reveals everything
  */
-
 class ProcessingTemplate extends Component {
   /**
    * Populates the template with default values for user input, if required
@@ -225,7 +226,9 @@ class ProcessingTemplate extends Component {
           });
         }
         if (canProcess) {
-          this.startWorker(layers, inputs);
+          this.props.popup
+            ? this.openPopup(layers, inputs)
+            : this.startProcessing(layers, inputs);
         }
       }
     }
@@ -234,47 +237,76 @@ class ProcessingTemplate extends Component {
    * Should start async process for turf operations, then add layer to map
    * Creates new webworker to perform processing. Script to be run is specified in 'operationtypes.js'
    */
-  startWorker = (layers, inputs) => {
+  startProcessing = (layers, inputs) => {
     this.setState({
       processing: true
     });
     const layer = this.props.operation.script(layers, inputs);
-    this.workerFinished(layer);
+    this.processFinished(layer);
+  };
+  openPopup = () => {
+    this.setState({
+      processing: true
+    });
   };
   /**
    * Callback for when processing is done. Calls App, which decides next action
    */
-  workerFinished = layer => {
+  processFinished = layer => {
     this.setState({ processing: false });
     //TODO: Show error if null
     if (layer !== null) {
       this.handleReset();
       this.props.onProcessingDone(layer);
+    } else {
+      alert("Processing area is empty");
     }
+  };
+  closePopup = () => {
+    this.setState({ processing: false });
   };
 
   /**
    * Creates layer and inputfields based on operation specifications
    * Creates reset button and start button for processing. Start button is greyed out if
-   * a process is ongoing
+   * a process is ongoing.
+   * The popup is only created if the type of operation needs a seperate window
    */
   render() {
-    const { listOpen } = this.props;
+    const { listOpen, popup } = this.props;
+    const PopupComponent = popup ? this.props.operation.popupComponent : null;
     return (
       <div className="template">
+        <Popup
+          open={popup && this.state.processing}
+          modal
+          onClose={this.closePopup}
+        >
+          {(popup && (
+            <PopupComponent
+              layers={this.state.layers}
+              inputs={this.state.inputs}
+              onExecute={this.processFinished}
+              onClose={this.closePopup}
+            />
+          )) ||
+            (!popup && <div />)}
+        </Popup>
         <div onClick={() => this.props.onToggle(this.props.operation.name)}>
           {this.props.operation.name}
-          <Popup
-            trigger={<img src={infoIcon} className="info-icon" alt="" />}
-            position="right top"
-            on="hover"
-          >
-            <img
-              style={{ width: "300px" }}
-              src={this.props.operation.info}
-              alt=""
-            />
-          </Popup>
+          {this.props.operation.info && (
+            <Popup
+              trigger={<img src={infoIcon} className="info-icon" alt="" />}
+              position="right top"
+              on="hover"
+            >
+              <img
+                style={{ width: "300px" }}
+                src={this.props.operation.info}
+                alt=""
+              />
+            </Popup>
+          )}
         </div>
         {listOpen && (
           <div>

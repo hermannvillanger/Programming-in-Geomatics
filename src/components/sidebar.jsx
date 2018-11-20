@@ -11,13 +11,16 @@ import PropTypes from "prop-types";
 import { LayerShape } from "./util/constants";
 
 class SideBar extends Component {
+  /**
+   * Render function.
+   * Contains area for processing functions
+   * area for layers
+   * area for uploading files
+   */
   render() {
     return (
       <nav id="sidebar" className="navbar bg-light">
-        <Geoprocessing
-          onProcessingDone={this.props.onProcessingDone}
-          openExtractor={this.props.openExtractor}
-        />
+        <Geoprocessing onProcessingDone={this.props.onProcessingDone} />
         <LayerList
           layerlist={this.props.layerlist}
           visiblemap={this.props.visiblemap}
@@ -28,7 +31,6 @@ class SideBar extends Component {
           onZoom={this.props.onZoom}
           onNameChange={this.props.onNameChange}
           onStyleChange={this.props.onStyleChange}
-          openProperties={this.props.openProperties}
         />
         <Upload onUpload={this.props.onUpload} />
       </nav>

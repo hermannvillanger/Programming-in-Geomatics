@@ -6,12 +6,16 @@ import React, { Component } from "react";
 import "./css/sidebar.css";
 import PropTypes from "prop-types";
 import { OperationShape } from "./util/constants.js";
-import ProcessingTemplate from "./processing/template";
-import { operations } from "./processing/operationtypes.js";
+import ProcessingTemplate from "./processingtemplate";
+import {
+  operations,
+  componentOperations
+} from "./processing/operationtypes.js";
 
 class Geoprocessing extends Component {
   state = {
     operations: operations,
+    componentOperations: componentOperations,
     listOpen: null
   };
   /**
@@ -26,21 +30,29 @@ class Geoprocessing extends Component {
       }
     });
   };
-  //TODO: Use props.openExtractor(layer) to open featureextractor
+  createProcessingTemplate = (operation, popup) => {
+    return (
+      <ProcessingTemplate
+        key={operation.name}
+        operation={operation}
+        onToggle={this.handleToggle}
+        onProcessingDone={this.props.onProcessingDone}
+        listOpen={this.state.listOpen === operation.name}
+        popup={popup}
+      />
+    );
+  };
   //TODO: Absolute orientation, fix list to the top
   render() {
     return (
       <div>
         <div className="group-divider">Geoprocessing</div>
-        {this.state.operations.map(operation => (
-          <ProcessingTemplate
-            key={operation.name}
-            operation={operation}
-            onToggle={this.handleToggle}
-            onProcessingDone={this.props.onProcessingDone}
-            listOpen={this.state.listOpen === operation.name}
-          />
-        ))}
+        {this.state.componentOperations.map(operation =>
+          this.createProcessingTemplate(operation, true)
+        )}
+        {this.state.operations.map(operation =>
+          this.createProcessingTemplate(operation, false)
+        )}
       </div>
     );
   }

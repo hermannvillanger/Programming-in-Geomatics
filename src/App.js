@@ -3,13 +3,10 @@ import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import SideBar from "./components/sidebar";
 import LeafletMap from "./components/leafletmap";
-import Properties from "./components/layerproperties";
 import { getInfo, getColor } from "./components/util/support.js";
 import { LayerShape } from "./components/util/constants.js";
 import PropTypes from "prop-types";
 import "./App.css";
-import "./components/css/modal.css";
-import Modal from "react-modal";
 
 /**
  * Navneforslag:
@@ -33,19 +30,17 @@ const DB_VERSION = 1;
 var db;
 
 class App extends Component {
-  state = {
-    layers: [],
-    visibility: new Map(),
-    styles: new Map(),
-    modalOpen: false
-  };
   constructor(props) {
     super(props);
+    this.state = {
+      layers: [],
+      visibility: new Map(),
+      styles: new Map()
+    };
     this.leafletmap = React.createRef();
   }
 
   componentDidMount() {
-    Modal.setAppElement("#root");
     this.dbInit();
   }
   componentWillUnmount() {
@@ -149,6 +144,9 @@ class App extends Component {
       });
     });
   };
+  /**
+   * Set default style for a layer
+   */
   setStyle = id => {
     const opacity = 0.8;
     const color = getColor(id);
@@ -165,15 +163,24 @@ class App extends Component {
     this.deleteFromState(id);
     this.deleteFromLeaflet(id);
   };
+  /**
+   * Zoom in on one layer
+   */
   handleZoom = id => {
     this.leafletmap.current.zoomToLayer(id);
   };
+  /**
+   * Change name of layer. Change name in state and in local storage
+   */
   handleNameChange = (layer, name) => {
     if (layer.name !== name && name.length > 0) {
       layer.name = name;
       this.localSave(layer);
     }
   };
+  /**
+   * Change the layer style (color, opacity) if the changes are valid (not null)
+   */
   handleStyleChange = (id, style) => {
     this.setState(prevState => {
       let { color, opacity } = style;
@@ -219,12 +226,14 @@ class App extends Component {
     this.leafletmap.current.removeLayer(id);
   };
   /**
-   * Some error with the layer, should be deleted
+   * There are some error with the layer, ex: invalid geoJSON, it should be deleted
    */
   handleError = id => {
     this.handleDelete(id);
   };
-
+  /**
+   * A layer is dragged to a new position, reorder the layers
+   */
   handleMove = (id, newIndex) => {
     this.setState(prevState => {
       const layerInfo = getInfo(id, prevState.layers);
@@ -234,10 +243,15 @@ class App extends Component {
       return { layers: layers };
     });
   };
+  /**
+   * Get a new layer as a result of a processing operation. Save it locally and add it
+   */
   handleProcessing = layer => {
     this.localSave(layer);
   };
-
+  /**
+   * The visibility of a layer is toggled
+   */
   handleToggle = id => {
     this.setState(prevState => {
       return {
@@ -245,58 +259,16 @@ class App extends Component {
       };
     });
   };
-  toggleProperties = layer => {
-    this.setState(prevState => {
-      return {
-        modalOpen: !prevState.modalOpen,
-        propModal: prevState.propModal === null ? layer : null,
-        extractorModal: null
-      };
-    });
-  };
-  toggleExtractor = layer => {
-    this.setState(prevState => {
-      return {
-        modalOpen: !prevState.modalOpen,
-        propModal: null,
-        extractorModal: prevState.extractorModal === null ? layer : null
-      };
-    });
-  };
-  closeModal = () => {
-    this.setState({ modalOpen: false, propModal: null, extractorModal: null });
-  };
-  setupPropertiesModal = layer => {
-    return (
-      <Properties
-        layer={layer}
-        style={this.state.styles.get(layer.id)}
-        onNameChange={this.handleNameChange}
-        onStyleChange={this.handleStyleChange}
-        onDialogueFinished={this.closeModal}
-      />
-    );
-  };
-  setupExtractorModal = layer => {
-    return <div />;
-  };
 
+  /**
+   * Render function.
+   * Contains popup menu for properties and feature extractor
+   * Sidebar
+   * Map
+   */
   render() {
-    const { modalOpen, propModal, extractorModal } = this.state;
-
     return (
       <React.Fragment>
-        <Modal
-          isOpen={modalOpen}
-          onRequestClose={this.closeModal}
-          style={{
-            content: { width: "30vw", height: "40vh", overflow: "hidden" },
-            overlay: { zIndex: "1000", overflow: "hidden" }
-          }}
-        >
-          {(propModal && this.setupPropertiesModal(propModal)) ||
-            (extractorModal && this.setupExtractorModal(extractorModal))}
-        </Modal>
         <SideBar
           layerlist={this.state.layers}
           visiblemap={this.state.visibility}
@@ -309,8 +281,6 @@ class App extends Component {
           onNameChange={this.handleNameChange}
           onStyleChange={this.handleStyleChange}
           onProcessingDone={this.handleProcessing}
-          openProperties={this.toggleProperties}
-          openExtractor={this.toggleExtractor}
         />
         <LeafletMap
           ref={this.leafletmap}

@@ -9,6 +9,11 @@ import PropTypes from "prop-types";
 import { LayerShape } from "./util/constants.js";
 
 class LayerList extends Component {
+  /**
+   * Render function.
+   * Contains title for layer list
+   * All layers in a vertical list under the title
+   */
   render() {
     return (
       <div>
@@ -26,7 +31,6 @@ class LayerList extends Component {
             onZoom={this.props.onZoom}
             onNameChange={this.props.onNameChange}
             onStyleChange={this.props.onStyleChange}
-            openProperties={this.props.openProperties}
           />
         ))}
       </div>

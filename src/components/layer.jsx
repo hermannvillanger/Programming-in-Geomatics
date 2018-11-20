@@ -5,9 +5,10 @@
 import React, { Component } from "react";
 import { DragSource, DropTarget } from "react-dnd";
 import { ItemTypes, LayerShape, Actions } from "./util/constants";
-import Properties from "./layerproperties";
 import "./css/sidebar.css";
 import "./css/contextmenu.css";
+import Popup from "reactjs-popup";
+import Properties from "./layerproperties";
 
 import flow from "lodash/flow";
 import PropTypes from "prop-types";
@@ -36,7 +37,7 @@ const layerTarget = {
     let { draggedId } = monitor.getItem();
     return draggedId !== props.layer.id;
   },
-  //App handles sorting the layer list
+  //App handles sorting of the layer list
   drop(props, monitor) {
     if (!monitor.didDrop()) {
       let { draggedId } = monitor.getItem();
@@ -58,18 +59,19 @@ function collectSource(connect, monitor) {
   };
 }
 
-/**
- * TODO: Ved trykk, drop-down meny med ekstra egenskaper el:
- * Høyreklikk for å åpne meny med: properties: color, opacity(drag bar 0-100%), save, change name
- * Sender color change event til layers
- * Endre farge o.l
- */
-
 class Layer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { openModal: false };
+  }
+  openProperties = () => {
+    this.setState({ openModal: true });
+  };
+  closeProperties = () => {
+    this.setState({ openModal: false });
+  };
   /**
-   * TODO: Setup two types of actions:
-   * 1: Can perform action immediatly: delete, zoom
-   * 2: Open menu user can use to set new value, then execute: change name, color...
+   * Method to decide which item was clicked and perform corresponding action
    */
   handleClick = action => {
     if (action === Actions.delete) {
@@ -77,9 +79,13 @@ class Layer extends Component {
     } else if (action === Actions.zoom) {
       this.props.onZoom(this.props.layer.id);
     } else if (action === Actions.properties) {
-      this.props.openProperties(this.props.layer);
+      this.openProperties();
     }
   };
+  /**
+   * Creates right click menu for render function.
+   * Uses createContexMenuItem for every item in the list
+   */
   createContexMenu = () => {
     return (
       <div>
@@ -101,6 +107,10 @@ class Layer extends Component {
       </div>
     );
   };
+  /**
+   * Each item in the right click menu
+   * Has onClick function, description and a small icon
+   */
   createContexMenuItem = (action, description, icon) => {
     return (
       <MenuItem onClick={() => this.handleClick(action)}>
@@ -109,7 +119,14 @@ class Layer extends Component {
       </MenuItem>
     );
   };
-
+  /**
+   * Render function.
+   * Contains popup with layer properties
+   * Right click menu with options
+   * Name of layer
+   * Square with color of layer
+   * Checkbox for toggling visibility
+   */
   render() {
     const {
       isDragging,
@@ -126,12 +143,29 @@ class Layer extends Component {
             //backgroundColor: this.props.style.color
           }}
         >
-          <ContextMenuTrigger id={this.props.index.toString()}>
+          <Popup
+            open={this.state.openModal}
+            modal
+            onClose={this.closeProperties}
+          >
+            <Properties
+              layer={this.props.layer}
+              style={this.props.style}
+              onNameChange={this.props.onNameChange}
+              onStyleChange={this.props.onStyleChange}
+              onDialogueFinished={this.closeProperties}
+            />
+          </Popup>
+          <ContextMenuTrigger
+            id={this.props.index.toString()}
+            holdToDisplay={-1}
+          >
             <span>{this.props.layer.name}</span>
             <div
               style={{
-                height: "100%",
+                height: "20px",
                 width: "20px",
+                float: "left",
                 backgroundColor: this.props.style.color
               }}
             />

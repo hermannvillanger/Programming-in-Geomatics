@@ -64,8 +64,8 @@ class LeafletMap extends Component {
     this.map.fitBounds(layer.getBounds());
   };
   /**
-   * Inserts data as geojson layer. Adds id field for easier identification
-   * TODO: Add try catch, remove layer if not valid geojson
+   * Inserts data as geojson layer. Adds id field for easier identification.
+   * If leaflet cannot read the layer, delete it from storage
    * @param {*} layer
    */
   addLayer = layer => {

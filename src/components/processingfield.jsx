@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { DragSource, DropTarget } from "react-dnd";
 import PropTypes from "prop-types";
-import { ItemTypes, LayerShape } from "../util/constants.js";
+import { ItemTypes, LayerShape } from "./util/constants.js";
 import flow from "lodash/flow";
-import "../css/sidebar.css";
+import "./css/sidebar.css";
 
 const operationSource = {
   //The dragged item has id, name and data of layer
@@ -76,7 +76,7 @@ class ProcessingField extends Component {
             cursor: canMove ? "pointer" : "default"
           }}
         >
-          {(!hasLayer && "Drop layer here") ||
+          {(!hasLayer && "Drop layer " + (this.props.index + 1) + " here") ||
             (hasLayer && this.props.layer.name)}
         </div>
       )
