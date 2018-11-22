@@ -12,7 +12,7 @@ export function intersectionScript(layers, inputs) {
   const layer2 = layers[1];
   const name = layer1.name + "-intersect-" + layer2.name;
   try {
-    const intersectLayer = intersect(layer1, layer2);
+    const intersectLayer = intersect(layer1.data, layer2.data);
     //TODO: If null, show that no intersection found
     if (!intersectLayer) {
       resultLayer = null;

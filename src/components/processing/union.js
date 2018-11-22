@@ -12,7 +12,8 @@ export function unionScript(layers, inputs) {
   const layer2 = layers[1];
   const name = layer1.name + "-union-" + layer2.name;
   try {
-    const unionLayer = union(layer1, layer2);
+    //FIXME: Cannot use union on featurecollections
+    const unionLayer = union(layer1.data, layer2.data);
     resultLayer = { name: name, data: unionLayer };
   } catch (error) {
     console.log("Error in union: ");

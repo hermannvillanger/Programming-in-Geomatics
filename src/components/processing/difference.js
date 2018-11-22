@@ -11,7 +11,7 @@ export function differenceScript(layers, inputs) {
   const layer2 = layers[1];
   const name = layer1.name + "-union-" + layer2.name;
   try {
-    const differenceLayer = difference(layer1, layer2);
+    const differenceLayer = difference(layer1.data, layer2.data);
     resultLayer = { name: name, data: differenceLayer };
   } catch (error) {
     console.log("Error in difference: ");

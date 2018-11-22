@@ -9,7 +9,7 @@ import intersectionImg from "../../images/intersection.png";
 import unionImg from "../../images/union.png";
 import differenceImg from "../../images/difference.png";
 
-import FeatureExtractor from "./featureextractor";
+import AttributeSelector from "./attributeselector";
 
 /**
  * Array of processing operators that do not need extra user input
@@ -67,10 +67,10 @@ function createInputValue(inputName, defaultInput, inputType) {
  */
 export const componentOperations = [
   {
-    name: "Feature extractor",
+    name: "Select properties",
     inputLayers: 1,
     inputValues: null,
     info: null,
-    popupComponent: FeatureExtractor
+    popupComponent: AttributeSelector
   }
 ];

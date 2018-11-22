@@ -93,7 +93,7 @@ class ProcessingTemplate extends Component {
           <input
             type={"text"}
             value={this.state.inputs[index]}
-            onChange={evt => this.handleInputValue(evt, index, inputValue)}
+            onChange={event => this.handleInputValue(event, index, inputValue)}
           />
         </div>
       );
@@ -103,8 +103,8 @@ class ProcessingTemplate extends Component {
    * Validates if the user input is non-empty and of correct type.
    * If not, replaces value with the default value, or an empty string if no default
    */
-  handleInputValue = (evt, index, inputValue) => {
-    const value = evt.target.value;
+  handleInputValue = (event, index, inputValue) => {
+    const value = event.target.value;
     this.setState(prevState => {
       let newValue;
       switch (inputValue.inputType) {
@@ -127,7 +127,7 @@ class ProcessingTemplate extends Component {
    * Creates drag-drop fields for layers, by amount specified in operation
    */
   createLayerFields = () => {
-    let inputFields = [];
+    const inputFields = [];
     for (let i = 0; i < this.props.operation.inputLayers; i++) {
       inputFields.push(
         <ProcessingField
@@ -207,29 +207,27 @@ class ProcessingTemplate extends Component {
    * Starts processing if not already processing, and if all inputs are valid
    */
   processingStart = () => {
-    const { layers, processing, inputs } = this.state;
+    const { layers, inputs } = this.state;
     const { operation } = this.props;
-    if (!processing) {
-      if (layers.find(layer => layer === null) === undefined) {
-        let canProcess = true;
-        if (operation.inputValues) {
-          operation.inputValues.forEach((inputValue, index) => {
-            //Input must be non-null, non-empty, and of correct type
-            if (
-              inputs[index] === null ||
-              String(inputs[index]).length === 0 ||
-              typeof inputs[index] !== inputValue.inputType
-            ) {
-              canProcess = false;
-              //TODO: Should show that inputs are not correct
-            }
-          });
-        }
-        if (canProcess) {
-          this.props.popup
-            ? this.openPopup(layers, inputs)
-            : this.startProcessing(layers, inputs);
-        }
+    if (layers.find(layer => layer === null) === undefined) {
+      let canProcess = true;
+      if (operation.inputValues) {
+        operation.inputValues.forEach((inputValue, index) => {
+          //Input must be non-null, non-empty, and of correct type
+          if (
+            inputs[index] === null ||
+            String(inputs[index]).length === 0 ||
+            typeof inputs[index] !== inputValue.inputType
+          ) {
+            canProcess = false;
+            //TODO: Should show that inputs are not correct
+          }
+        });
+      }
+      if (canProcess) {
+        this.props.popup
+          ? this.openPopup(layers, inputs)
+          : this.startProcessing(layers, inputs);
       }
     }
   };
@@ -253,14 +251,13 @@ class ProcessingTemplate extends Component {
    * Callback for when processing is done. Calls App, which decides next action
    */
   processFinished = layer => {
-    this.setState({ processing: false });
     //TODO: Show error if null
     if (layer !== null) {
-      this.handleReset();
       this.props.onProcessingDone(layer);
     } else {
       alert("Processing area is empty");
     }
+    this.handleReset();
   };
   closePopup = () => {
     this.setState({ processing: false });
@@ -274,7 +271,7 @@ class ProcessingTemplate extends Component {
    */
   render() {
     const { listOpen, popup } = this.props;
-    const PopupComponent = popup ? this.props.operation.popupComponent : null;
+    const PopupComponent = popup ? this.props.operation.popupComponent : "div";
     return (
       <div className="template">
         <Popup
@@ -282,15 +279,14 @@ class ProcessingTemplate extends Component {
           modal
           onClose={this.closePopup}
         >
-          {(popup && (
+          {
             <PopupComponent
               layers={this.state.layers}
               inputs={this.state.inputs}
               onExecute={this.processFinished}
               onClose={this.closePopup}
             />
-          )) ||
-            (!popup && <div />)}
+          }
         </Popup>
         <div onClick={() => this.props.onToggle(this.props.operation.name)}>
           {this.props.operation.name}
@@ -312,10 +308,15 @@ class ProcessingTemplate extends Component {
           <div>
             {this.createLayerFields()}
             {this.createInputFields()}
-            <button onClick={() => this.handleReset()}>Reset</button>
+            <button
+              onClick={() => this.handleReset()}
+              disabled={this.state.processing}
+            >
+              Reset
+            </button>
             <button
               onClick={() => this.processingStart()}
-              style={{ opacity: this.state.processing ? 0.3 : 1 }}
+              disabled={this.state.processing}
             >
               Start
             </button>
