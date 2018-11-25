@@ -7,6 +7,8 @@ import { DragSource, DropTarget } from "react-dnd";
 import { ItemTypes, LayerShape, Actions } from "./util/constants";
 import "./css/sidebar.css";
 import "./css/contextmenu.css";
+import "./css/popup.css";
+
 import Popup from "reactjs-popup";
 import Properties from "./layerproperties";
 
@@ -161,6 +163,7 @@ class Layer extends Component {
             holdToDisplay={-1}
           >
             <span>{this.props.layer.name}</span>
+            {/*TODO: Overflow of name*/}
             <div
               style={{
                 height: "20px",

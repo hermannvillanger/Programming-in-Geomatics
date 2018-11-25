@@ -25,11 +25,18 @@ export const operations = [
     name: "Buffer",
     inputLayers: 1,
     inputValues: [
-      createInputValue("Buffer value", 100, InputTypes.number)
-      //createInputValue("Dissolve", true, InputTypes.boolean)
+      createInputValue("Buffer value", 100, InputTypes.number),
+      createInputValue("Dissolve(very slow)", true, InputTypes.boolean)
     ],
     script: bufferScript,
     info: bufferImg
+  },
+  {
+    name: "Difference",
+    inputLayers: 2,
+    inputValues: null,
+    script: differenceScript,
+    info: differenceImg
   },
   {
     name: "Intersection",
@@ -39,18 +46,11 @@ export const operations = [
     info: intersectionImg
   },
   {
-    name: "Union",
+    name: "Union(very slow)",
     inputLayers: 2,
     inputValues: null,
     script: unionScript,
     info: unionImg
-  },
-  {
-    name: "Difference",
-    inputLayers: 2,
-    inputValues: null,
-    script: differenceScript,
-    info: differenceImg
   }
 ];
 function createInputValue(inputName, defaultInput, inputType) {

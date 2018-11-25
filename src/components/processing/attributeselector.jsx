@@ -152,7 +152,7 @@ class AttributeSelector extends Component {
   getSelectorForProperty = (property, prevState) => {
     const selector = {
       property: property,
-      operator: this.getLegalComparators(property)[0],
+      operator: this.getLegalComparators(prevState.dataTypes.get(property))[0],
       value: prevState.properties[property][0]
     };
     return selector;
@@ -162,13 +162,15 @@ class AttributeSelector extends Component {
    * Strings can only have equals and not equals
    * Numbers can have all comparison methods
    */
-  getLegalComparators = property => {
-    if (this.state.dataTypes.get(property) === InputTypes.string) {
-      return [ComparisonMethods.equal, ComparisonMethods.notEqual];
-    } else if (this.state.dataTypes.get(property) === InputTypes.number) {
-      return Object.values(ComparisonMethods);
+  getLegalComparators = dataType => {
+    switch (dataType) {
+      case InputTypes.string:
+        return [ComparisonMethods.equal, ComparisonMethods.notEqual];
+      case InputTypes.number:
+        return Object.values(ComparisonMethods);
+      default:
+        return null;
     }
-    return null;
   };
   /**
    * User deletes specific selector
@@ -203,8 +205,6 @@ class AttributeSelector extends Component {
           break;
         default:
       }
-      console.log("Updated " + type);
-      console.log(selector);
       selectors.splice(pos, 1, selector);
       return { selectors: selectors };
     });
@@ -212,15 +212,18 @@ class AttributeSelector extends Component {
 
   /**
    * For selecting data from a layer.
+   * TODO: Add input field for new name
    */
   createSelectFields = () => {
     const selectFields = [];
     const properties = Object.keys(this.state.properties);
     this.state.selectors.forEach((selector, position) => {
-      const comparators = this.getLegalComparators(selector.property);
+      const comparators = this.getLegalComparators(
+        this.state.dataTypes.get(selector.property)
+      );
       const values = this.state.properties[selector.property];
       selectFields.push(
-        <div className="select-container" key={position}>
+        <div key={position}>
           {this.createSelectField(
             properties,
             selector.property,

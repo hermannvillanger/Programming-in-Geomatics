@@ -130,6 +130,7 @@ class App extends Component {
    */
   addGeoJSONLayer = layers => {
     layers.forEach(layer => {
+      console.log(layer);
       this.setState(prevState => {
         const layers = prevState.layers;
         layers.splice(0, 0, layer);
@@ -144,6 +145,7 @@ class App extends Component {
       });
     });
   };
+
   /**
    * Set default style for a layer
    */

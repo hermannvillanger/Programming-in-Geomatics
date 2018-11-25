@@ -8,6 +8,7 @@ import ProcessingField from "./processingfield";
 import PropTypes from "prop-types";
 import { OperationShape, LayerShape, InputTypes } from "./util/constants";
 import "./css/sidebar.css";
+import "./css/popup.css";
 import { validateNumberInput } from "./util/support.js";
 import infoIcon from "../images/iconinfo.svg";
 import Popup from "reactjs-popup";
@@ -23,8 +24,8 @@ import Popup from "reactjs-popup";
  */
 class ProcessingTemplate extends Component {
   /**
-   * Populates the template with default values for user input, if required
-   * @param {*} props
+   * Populates the template with default values for user input, if required,
+   * and array for inputlayers
    */
   constructor(props) {
     super(props);

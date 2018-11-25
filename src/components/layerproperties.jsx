@@ -12,7 +12,7 @@ const InputValues = {
   color: "Color",
   opacity: "Opacity"
 };
-
+//FIXME: Opacity is not updated
 class Properties extends Component {
   constructor(props) {
     super(props);
