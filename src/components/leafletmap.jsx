@@ -30,8 +30,10 @@ class LeafletMap extends Component {
   createMap(mapid) {
     let map = L.map(mapid).setView(this.state.center, this.state.zoom);
     L.tileLayer(
-      "http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=norges_grunnkart_graatone&zoom={z}&x={x}&y={y}",
-      { attribution: '<a href="http://www.kartverket.no/">Kartverket</a>' }
+      "http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=norges_grunnkart&zoom={z}&x={x}&y={y}",
+      {
+        attribution: '<a href="http://www.kartverket.no/">Kartverket</a>'
+      }
     ).addTo(map);
     map.zoomControl.setPosition("topright");
 
