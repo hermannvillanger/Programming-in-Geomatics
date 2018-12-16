@@ -1,7 +1,3 @@
-/**
- * Created by Hermann
- * Class for the leaflet map
- */
 import React, { Component } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -9,6 +5,9 @@ import "./css/map.css";
 import PropTypes from "prop-types";
 import { LayerShape } from "./util/constants.js";
 
+/**
+ * Class for all interactions with the leaflet map
+ */
 class LeafletMap extends Component {
   state = {
     mapid: "mapid",

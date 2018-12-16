@@ -1,18 +1,14 @@
 import React, { Component } from "react";
-//import PropTypes from "prop-types";
-//import { InputTypes } from "./util/constants.js";
 import "./css/sidebar.css";
 import { validateNumberInput } from "./util/support.js";
-/**
- * Popup menu for giving new name, new color and opacity, save layer?...
- * On top: page for name, color, ... extendable
- */
 const InputValues = {
   name: "Name",
   color: "Color",
   opacity: "Opacity"
 };
-//FIXME: Opacity is not updated
+/**
+ * Class for the popup menu which allows changing properties of a layer
+ */
 class Properties extends Component {
   constructor(props) {
     super(props);
@@ -74,7 +70,7 @@ class Properties extends Component {
     const opacity = this.state.inputs.get(InputValues.opacity);
     this.props.onStyleChange(this.props.layer.id, {
       color: color.length > 0 ? color : null,
-      opacity: opacity.length > 0 ? opacity : null
+      opacity: String(opacity).length > 0 ? opacity : null
     });
     this.removeDialogue();
   };

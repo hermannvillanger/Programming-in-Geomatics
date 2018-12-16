@@ -1,7 +1,3 @@
-/**
- * Created by Hermann
- * Class for listing all operations, and managing their output
- */
 import React, { Component } from "react";
 import "./css/sidebar.css";
 import PropTypes from "prop-types";
@@ -12,6 +8,9 @@ import {
   componentOperations
 } from "./processing/operationtypes.js";
 
+/**
+ * Class for listing all operations, and managing their output
+ */
 class Geoprocessing extends Component {
   state = {
     operations: operations,
@@ -30,6 +29,11 @@ class Geoprocessing extends Component {
       }
     });
   };
+  /**
+   * Create clickable sidebar entity for each operation
+   * @param {Object} operation The object describing the operation
+   * @param {Boolean} popup If the operation is a whole component, or only a function
+   */
   createProcessingTemplate = (operation, popup) => {
     return (
       <ProcessingTemplate
@@ -42,7 +46,6 @@ class Geoprocessing extends Component {
       />
     );
   };
-  //TODO: Absolute orientation, fix list to the top
   render() {
     return (
       <div>

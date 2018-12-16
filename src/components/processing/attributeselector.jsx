@@ -4,7 +4,10 @@ import "../css/processing.css";
 import "../css/sidebar.css";
 import deleteIcon from "../../images/icondelete.svg";
 
-const ComparisonMethods = {
+/**
+ * The ways property values can be compared when selecting data from layerfiles.
+ */
+export const ComparisonMethods = {
   equal: "equal to",
   notEqual: "not equal to",
   greater: "greater than",
@@ -12,28 +15,36 @@ const ComparisonMethods = {
   greaterEqual: "greater or equal to",
   lessEqual: "less or equal to"
 };
-const AttributeType = {
+/**
+ * The datatypes in the three drop down menus
+ */
+export const AttributeType = {
   property: "property",
   operator: "operator",
   value: "value"
 };
-
+/**
+ * Class for selecting specific attributes from a layer and creating a new layer from them
+ */
 class AttributeSelector extends Component {
   /**
    * Datatypes:
-   * Selectors: array of objects. Objects contain: property, operator, comparison value
-   * Properties: object with arrays. Keys are properties, values are array of property values
-   * Datatypes: which datatype each property contains
+   * @param {Array} filters: Array of objects. Objects contain: property, operator, comparison value
+   * @param {Object} properties: Object with arrays. Keys are properties, values are array of property values
+   * @param {Map} datatypes: Map over the datatype each property contains
    */
   constructor(props) {
     super(props);
     this.state = {
-      selectors: [],
+      filters: [],
       properties: {},
       dataTypes: new Map(),
       processing: false
     };
   }
+  /**
+   * Analyse values in the inputlayer, create an initial selectField
+   */
   componentDidMount() {
     this.loadAttributes();
     this.addSelectField();
@@ -68,6 +79,8 @@ class AttributeSelector extends Component {
   /**
    * Set the datatype for each property. Can be string or number.
    * Is used to determine which operators the user can use, ie: <, > may only be used on numbers
+   * @param {} property Property field from layer. Ex: "road type", "water depth".
+   * @param {} value Corresponding value of the property field. Ex: "highway", "15".
    */
   setDataType = (property, value) => {
     let type = null;
@@ -80,86 +93,92 @@ class AttributeSelector extends Component {
       return { dataTypes: prevState.dataTypes.set(property, type) };
     });
   };
+  /**
+   * Goes through the filters the user has chosen and creates a new layer based on them
+   */
   onExecute = () => {
     const layer = this.props.layers[0];
     const data = Object.assign({}, layer.data);
     data.features = [];
     for (let featureID in layer.data.features) {
       const feature = layer.data.features[featureID];
-      if (this.checkSelectors(feature.properties)) {
+      if (this.checkFilters(feature.properties)) {
         data.features.push(feature);
       }
     }
-    const newName = layer.name + "-select";
+    const newName = "sp-" + layer.name;
     const extractedLayer = { name: newName, data: data };
     this.props.onExecute(extractedLayer);
   };
   /**
    * Check if the feature fulfills all selection criteria
    */
-  checkSelectors = properties => {
+  checkFilters = properties => {
     let fulfill = true;
-    for (let selectorID in this.state.selectors) {
-      const selector = this.state.selectors[selectorID];
-      if (!this.fulfillCriteria(selector, properties[selector.property])) {
+    for (let filterID in this.state.filters) {
+      const filter = this.state.filters[filterID];
+      if (!this.fulfillCriteria(filter, properties[filter.property])) {
         fulfill = false;
       }
     }
     return fulfill;
   };
   /**
-   * Compares the selector value to the inputvalue using the comparison method.
-   * Note: we are comparing 'value' to 'selector.value'
+   * Compares the filter value to the inputvalue using the comparison method.
+   * Note: we are comparing 'value' to 'filter.value'
    */
-  fulfillCriteria = (selector, value) => {
-    switch (selector.operator) {
+  fulfillCriteria = (filter, value) => {
+    switch (filter.operator) {
       case ComparisonMethods.equal:
-        return value === selector.value;
+        return value === filter.value;
       case ComparisonMethods.notEqual:
-        return value !== selector.value;
+        return value !== filter.value;
       case ComparisonMethods.greater:
-        return value > selector.value;
+        return value > filter.value;
       case ComparisonMethods.less:
-        return value < selector.value;
+        return value < filter.value;
       case ComparisonMethods.greaterEqual:
-        return value >= selector.value;
+        return value >= filter.value;
       case ComparisonMethods.lessEqual:
-        return value <= selector.value;
+        return value <= filter.value;
       default:
         return false;
     }
   };
-
+  /**
+   * Cancels the attribute selection without applying any filters
+   */
   onCancel = () => {
     this.props.onClose();
   };
   /**
-   * Add a new base selectfield to selectors
+   * Add a new base selectfield to filters. Uses the first available property and its
+   * first legal operator and value
    */
   addSelectField = () => {
     this.setState(prevState => {
-      const selectors = prevState.selectors;
+      const filters = prevState.filters;
       const firstProperty = Object.keys(prevState.properties)[0];
-      const selector = this.getSelectorForProperty(firstProperty, prevState);
-      selectors.push(selector);
-      return { selectors: selectors };
+      const filter = this.getFilterForProperty(firstProperty, prevState);
+      filters.push(filter);
+      return { filters: filters };
     });
   };
   /**
-   * Returns a valid selector for a specific property, with
+   * Returns a valid filter for a specific property, with
    * the first operator and value as its default values
    */
-  getSelectorForProperty = (property, prevState) => {
-    const selector = {
+  getFilterForProperty = (property, prevState) => {
+    const filter = {
       property: property,
       operator: this.getLegalComparators(prevState.dataTypes.get(property))[0],
       value: prevState.properties[property][0]
     };
-    return selector;
+    return filter;
   };
   /**
    * Returns the comparators that can be used on a specific datatype.
-   * Strings can only have equals and not equals
+   * Strings can only have equals (=) and not equals (!=).
    * Numbers can have all comparison methods
    */
   getLegalComparators = dataType => {
@@ -173,40 +192,40 @@ class AttributeSelector extends Component {
     }
   };
   /**
-   * User deletes specific selector
+   * User deletes specific filter
    */
   deleteSelection = pos => {
     this.setState(prevState => {
-      const selectors = prevState.selectors;
-      selectors.splice(pos, 1);
-      return { selectors: selectors };
+      const filters = prevState.filters;
+      filters.splice(pos, 1);
+      return { filters: filters };
     });
   };
 
   /**
-   * Handles user input to a selector. Updates a selector object with the new
-   * value, according to the type
+   * Handles user input to a filter. Updates a filter object with the new
+   * value, according to which AttributeType is is
    */
   handleSelectionUpdate = (event, pos, type) => {
     const newValue = event.target.value;
     this.setState(prevState => {
-      const selectors = prevState.selectors;
-      let selector = selectors[pos];
+      const filters = prevState.filters;
+      let filter = filters[pos];
       switch (type) {
         //Need to update the property and its possible values
         case AttributeType.property:
-          selector = this.getSelectorForProperty(newValue, prevState);
+          filter = this.getFilterForProperty(newValue, prevState);
           break;
         case AttributeType.operator:
-          selector.operator = newValue;
+          filter.operator = newValue;
           break;
         case AttributeType.value:
-          selector.value = newValue;
+          filter.value = newValue;
           break;
         default:
       }
-      selectors.splice(pos, 1, selector);
-      return { selectors: selectors };
+      filters.splice(pos, 1, filter);
+      return { filters: filters };
     });
   };
 
@@ -217,28 +236,28 @@ class AttributeSelector extends Component {
   createSelectFields = () => {
     const selectFields = [];
     const properties = Object.keys(this.state.properties);
-    this.state.selectors.forEach((selector, position) => {
+    this.state.filters.forEach((filter, position) => {
       const comparators = this.getLegalComparators(
-        this.state.dataTypes.get(selector.property)
+        this.state.dataTypes.get(filter.property)
       );
-      const values = this.state.properties[selector.property];
+      const values = this.state.properties[filter.property];
       selectFields.push(
         <div key={position}>
           {this.createSelectField(
             properties,
-            selector.property,
+            filter.property,
             AttributeType.property,
             position
           )}
           {this.createSelectField(
             comparators,
-            selector.operator,
+            filter.operator,
             AttributeType.operator,
             position
           )}
           {this.createSelectField(
             values,
-            selector.value,
+            filter.value,
             AttributeType.value,
             position
           )}
@@ -247,7 +266,7 @@ class AttributeSelector extends Component {
             alt=""
             onClick={() => this.deleteSelection(position)}
           />
-          {/*TODO: Add image with + sign, for adding selections*/}
+          {/*TODO: Add image with + sign, for adding filters*/}
         </div>
       );
     });
@@ -271,13 +290,18 @@ class AttributeSelector extends Component {
       </select>
     );
   };
-
+  /**
+   * Render function
+   * Contains fields for filtering layer data
+   * Button for adding new filters
+   * Cancel button and start button
+   */
   render() {
     return (
       <div>
         {this.createSelectFields()}
         <button onClick={this.addSelectField} disabled={this.state.processing}>
-          Add selection
+          Add filter
         </button>
         <button onClick={this.onCancel} disabled={this.state.processing}>
           Cancel

@@ -8,27 +8,16 @@ import { LayerShape } from "./components/util/constants.js";
 import PropTypes from "prop-types";
 import "./App.css";
 
-/**
- * Navneforslag:
- * elGIS, elvis, som en elg
- * maGISk
- * reGISter
- * enerGISk
- * NorGIS
- * KronesGIS
- * TODO: Forslag: Bruke worker, undersøk dette
- */
-/*
-console debugging:
-list = [{id:1, name:"one"},{id:2, name:"two"},{id:3, name:"three"},{id:4, name:"four"} ]
-*/
-
 const DB_NAME = "gisdb";
 const LAYER_STORE = "layers";
 //const GROUP_STORE = "groups";
 const DB_VERSION = 1;
 var db;
 
+/**
+ * Controller class for website. Responsible for creating all components
+ * and contains current system state
+ */
 class App extends Component {
   constructor(props) {
     super(props);
@@ -39,21 +28,27 @@ class App extends Component {
     };
     this.leafletmap = React.createRef();
   }
-
+  /**
+   * Initialize database, retrieve locally saved layers
+   */
   componentDidMount() {
     this.dbInit();
   }
+  /**
+   * Close database connection
+   */
   componentWillUnmount() {
     db.close();
   }
   /**
-   * Initialize database if not created, and reads layers
+   * Initialize database if not created, and reads saved layers
    */
   dbInit = () => {
     let request = indexedDB.open(DB_NAME, DB_VERSION);
     request.onerror = event => {
       alert("Error with indexeddb");
     };
+    //Database is not created, create new
     request.onupgradeneeded = event => {
       request.result.createObjectStore(LAYER_STORE, {
         keyPath: "id",
@@ -80,7 +75,7 @@ class App extends Component {
   /**
    * Handles uploaded and converted geojson files.
    * Reads content and saves if not empty
-   * @param file, geojson file to be read and saved
+   * @param {File} file, geojson file to be read and saved
    */
   handleUpload = files => {
     files.forEach(file => {
@@ -96,8 +91,6 @@ class App extends Component {
               data: json
             };
             this.localSave(layer);
-          } else {
-            console.log("Json === null");
           }
         } catch (ex) {
           alert("Error reading json file: " + ex);
@@ -110,7 +103,7 @@ class App extends Component {
 
   /**
    * Saves file locally, then calls createFromGeoJSON
-   * TODO: Forbedringspotensiale, lagre liste over geosjon samtidig
+   * @param {Object} layer Object with processed json data and name
    */
   localSave = layer => {
     let dbsave = db.transaction(LAYER_STORE, "readwrite");
@@ -126,7 +119,7 @@ class App extends Component {
   };
   /**
    * Creates sidebar layer and map layer
-   * @param layer, with name, data and id
+   * @param {Layer} layer Layer with name, data and id
    */
   addGeoJSONLayer = layers => {
     layers.forEach(layer => {
@@ -158,7 +151,6 @@ class App extends Component {
 
   /**
    * Delete layer from storage, sidebar and map
-   * @param id, id of layer to be deleted
    */
   handleDelete = id => {
     this.deleteFromStorage(id);
@@ -172,7 +164,7 @@ class App extends Component {
     this.leafletmap.current.zoomToLayer(id);
   };
   /**
-   * Change name of layer. Change name in state and in local storage
+   * Change name of layer, in both current state and in local storage
    */
   handleNameChange = (layer, name) => {
     if (layer.name !== name && name.length > 0) {
@@ -181,7 +173,7 @@ class App extends Component {
     }
   };
   /**
-   * Change the layer style (color, opacity) if the changes are valid (not null)
+   * Change the layer style (color, opacity) if the changes are not null
    */
   handleStyleChange = (id, style) => {
     this.setState(prevState => {
@@ -200,7 +192,6 @@ class App extends Component {
 
   /**
    * Delete layer from indexeddb
-   * @param id of layer
    */
   deleteFromStorage = id => {
     let dbdelete = db.transaction(LAYER_STORE, "readwrite");
@@ -212,7 +203,6 @@ class App extends Component {
   };
   /**
    * Delete layer from state, which in turn deletes it from the sidebar
-   * @param id of layer
    */
   deleteFromState = id => {
     this.setState(prevState => {
@@ -222,7 +212,6 @@ class App extends Component {
   };
   /**
    * Delete layer from leaflet
-   * @param id of layer
    */
   deleteFromLeaflet = id => {
     this.leafletmap.current.removeLayer(id);
@@ -246,7 +235,7 @@ class App extends Component {
     });
   };
   /**
-   * Get a new layer as a result of a processing operation. Save it locally and add it
+   * Gets a new layer as a result of a processing operation. Saves it locally
    */
   handleProcessing = layer => {
     this.localSave(layer);
@@ -264,9 +253,8 @@ class App extends Component {
 
   /**
    * Render function.
-   * Contains popup menu for properties and feature extractor
-   * Sidebar
-   * Map
+   * Contains Sidebar
+   * LeafletMap
    */
   render() {
     return (

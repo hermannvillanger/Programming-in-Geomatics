@@ -1,10 +1,6 @@
-/**
- * Created by Hermann
- * Class for visualising and manipulating each layers in the sidebar
- */
 import React, { Component } from "react";
 import { DragSource, DropTarget } from "react-dnd";
-import { ItemTypes, LayerShape, Actions } from "./util/constants";
+import { ItemTypes, LayerShape } from "./util/constants";
 import "./css/sidebar.css";
 import "./css/contextmenu.css";
 import "./css/popup.css";
@@ -18,6 +14,15 @@ import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import zoomIcon from "../images/iconzoom.svg";
 import settingsIcon from "../images/iconsettings.svg";
 import deleteIcon from "../images/icondelete.svg";
+
+/**
+ * The different actions in the layers right click menu
+ */
+const Actions = {
+  delete: "delete",
+  zoom: "zoom",
+  properties: "properties"
+};
 
 /**
  * Also must be dropped in processingfield. Use itemtypes operation for that
@@ -60,7 +65,9 @@ function collectSource(connect, monitor) {
     isDragging: monitor.isDragging()
   };
 }
-
+/**
+ * Class for visualizing the geojson layer in the sidebar
+ */
 class Layer extends Component {
   constructor(props) {
     super(props);
@@ -122,7 +129,7 @@ class Layer extends Component {
     );
   };
   /**
-   * Render function.
+   * Render function
    * Contains popup with layer properties
    * Right click menu with options
    * Name of layer
@@ -141,8 +148,10 @@ class Layer extends Component {
         <div
           className="layer"
           style={{
-            opacity: isDragging ? 0 : isOver ? 0.8 : 1
-            //backgroundColor: this.props.style.color
+            opacity: isDragging ? 0 : 1,
+            backgroundColor: isOver
+              ? "rgb(120, 120, 120)"
+              : "rgb(217, 217, 217)"
           }}
         >
           <Popup
@@ -163,7 +172,7 @@ class Layer extends Component {
             holdToDisplay={-1}
           >
             <span>{this.props.layer.name}</span>
-            {/*TODO: Overflow of name*/}
+            {/*FIXME: Overflow of name/Size */}
             <div
               style={{
                 height: "20px",

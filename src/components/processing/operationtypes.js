@@ -12,21 +12,23 @@ import differenceImg from "../../images/difference.png";
 import AttributeSelector from "./attributeselector";
 
 /**
- * Array of processing operators that do not need extra user input
+ * Array of processing operators that do not need a special window for user input
+ *
  * Format:
- * name: must be unique
- * inputLayers: how many layers is operates on
- * inputValues: null if no extra input, or an array or objects describing the input
- * script: which function will be executed
- * info: descriptive image of the operation. An image link or null
+ * @param {String} name: Name of operation, must be unique
+ * @param {Number} inputLayers: Inputlayers for the operation. Must be 1 or more
+ * @param {Array|Null} inputValues: Which extra inputvalues the operation uses. Null if no extra input,
+ * an array of objects describing the input is othervise
+ * @param {Function} script: The js function which contains the operation
+ * @param {Image|Null} info: A descriptive image of the operation. An image link or null if no image
  */
 export const operations = [
   {
     name: "Buffer",
     inputLayers: 1,
     inputValues: [
-      createInputValue("Buffer value", 100, InputTypes.number),
-      createInputValue("Dissolve(very slow)", true, InputTypes.boolean)
+      createInputValue("Buffer radius", 100, InputTypes.number),
+      createInputValue("Dissolve(very slow)", false, InputTypes.boolean)
     ],
     script: bufferScript,
     info: bufferImg
@@ -53,6 +55,12 @@ export const operations = [
     info: unionImg
   }
 ];
+/**
+ * Creates objects describing inputvalue fields.
+ * @param {String} inputName Name of inputvalue
+ * @param {InputTypes} defaultInput Default value used as inputvalue
+ * @param {InputTypes} inputType Type of inputvalue
+ */
 function createInputValue(inputName, defaultInput, inputType) {
   return {
     inputName: inputName,
@@ -64,13 +72,21 @@ function createInputValue(inputName, defaultInput, inputType) {
 /**
  * Operations needing additional user interaction, like feature extractors.
  * Must have a component describing the popupwindow
+ *
+ * Format:
+ * @param {String} name: Name of operation, must be unique
+ * @param {Number} inputLayers: Inputlayers for the operation. Must be 1 or more
+ * @param {Array|Null} inputValues: Which extra inputvalues the operation uses. Null if no extra input,
+ * an array of objects describing the input is othervise
+ * @param {Function} popupComponent: The jsx component describing the popup window for the operation
+ * @param {Image|Null} info: A descriptive image of the operation. An image link or null if no image
  */
 export const componentOperations = [
   {
     name: "Select properties",
     inputLayers: 1,
     inputValues: null,
-    info: null,
-    popupComponent: AttributeSelector
+    popupComponent: AttributeSelector,
+    info: null
   }
 ];

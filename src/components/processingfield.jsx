@@ -54,8 +54,15 @@ function collectSource(connect, monitor) {
     isDragging: monitor.isDragging()
   };
 }
-
+/**
+ * Class for the droppable layer field in each operation.
+ * Layers can be dropped from the layer list or from other processingfields
+ */
 class ProcessingField extends Component {
+  /**
+   * Render function
+   * Contains a field which layers can be dropped on
+   */
   render() {
     const {
       isDragging,

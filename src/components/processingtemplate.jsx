@@ -1,8 +1,3 @@
-/**
- * Created by Hermann
- * Base class for operations in the sidebar. Creates inputfields
- * and initiates the processing operation on the input layers
- */
 import React, { Component } from "react";
 import ProcessingField from "./processingfield";
 import PropTypes from "prop-types";
@@ -14,13 +9,8 @@ import infoIcon from "../images/iconinfo.svg";
 import Popup from "reactjs-popup";
 
 /**
- * General setup:
- * Number of layers to take in
- * Operation to be used
- * Button for executing operation, send ids of layers to executor
- * Button for switching layers/drag and switch places
- * Button for emptying selection, only after finished
- * Expand drop down menu when clicked on, reveals everything
+ * Base class for operations in the sidebar. Creates inputfields
+ * and initiates the processing operation on the input layers
  */
 class ProcessingTemplate extends Component {
   /**
@@ -147,6 +137,8 @@ class ProcessingTemplate extends Component {
    * Handles dropping of a layer. If it already exists, move the layer to the new position,
    * and swap places if a layer is already there.
    * If new layer, replace the layer currently on that index
+   * @param {Object} layer The dropped layer
+   * @param {Number} index The new index of the layer
    */
   handleDrop = (layer, index) => {
     this.setState(prevState => {
@@ -162,7 +154,7 @@ class ProcessingTemplate extends Component {
     });
   };
   /**
-   * If layer id already exists, return index of the layer
+   * If layer with id already exists, return index of the layer
    */
   checkLayers = (id, layers) => {
     return layers.indexOf(
@@ -180,7 +172,7 @@ class ProcessingTemplate extends Component {
   };
 
   /**
-   * Resets state to default values. Empty for layers, default values for
+   * Resets state to default values. Empty for layers, default values for inputs
    */
   handleReset = () => {
     this.setState(() => {
@@ -195,17 +187,9 @@ class ProcessingTemplate extends Component {
     });
   };
   /**
-   * Removes a specific layer. May be unneeded
-   */
-  resetField = index => {
-    this.setState(prevState => {
-      let layers = prevState.layers;
-      layers.splice(index, 1, null);
-      return { layers: layers };
-    });
-  };
-  /**
-   * Starts processing if not already processing, and if all inputs are valid
+   * Checks if processing can start.
+   * Can start if not already processing, if no layer fields are empty,
+   * and if all inputs are valid
    */
   processingStart = () => {
     const { layers, inputs } = this.state;
@@ -221,7 +205,6 @@ class ProcessingTemplate extends Component {
             typeof inputs[index] !== inputValue.inputType
           ) {
             canProcess = false;
-            //TODO: Should show that inputs are not correct
           }
         });
       }
@@ -233,8 +216,7 @@ class ProcessingTemplate extends Component {
     }
   };
   /**
-   * Should start async process for turf operations, then add layer to map
-   * Creates new webworker to perform processing. Script to be run is specified in 'operationtypes.js'
+   * Starts processing without popup
    */
   startProcessing = (layers, inputs) => {
     this.setState({
@@ -243,16 +225,19 @@ class ProcessingTemplate extends Component {
     const layer = this.props.operation.script(layers, inputs);
     this.processFinished(layer);
   };
+  /**
+   * Opens the popup processing window
+   */
   openPopup = () => {
     this.setState({
       processing: true
     });
   };
   /**
-   * Callback for when processing is done. Calls App, which decides next action
+   * Callback for when processing is done. Adds the layer to the map,
+   * and resets all inputs for the operation
    */
   processFinished = layer => {
-    //TODO: Show error if null
     if (layer !== null) {
       this.props.onProcessingDone(layer);
     } else {
@@ -265,6 +250,7 @@ class ProcessingTemplate extends Component {
   };
 
   /**
+   * Render function
    * Creates layer and inputfields based on operation specifications
    * Creates reset button and start button for processing. Start button is greyed out if
    * a process is ongoing.

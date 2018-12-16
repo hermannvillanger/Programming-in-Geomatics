@@ -10,9 +10,7 @@ export function getInfo(id, arraylist) {
 }
 
 /**
- * TODO: Id close to each other should be very different, give same color each time
- * Seeded random?
- * Should give a color from list based on modulo of layer id
+ * Gives a random color to a layer
  */
 export function getColor(id) {
   var x = Math.round(0xffffff * Math.random()).toString(16);

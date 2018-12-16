@@ -13,37 +13,35 @@ export const SHAPE_FORMATS = [
   ".shx",
   ".shp.xml"
 ];
+/**
+ * Targets and sources for drag and drop functionality.
+ * Use these keywords when making draggable layer,
+ * a droppable field for layers in an operation etc...
+ */
 export const ItemTypes = {
   LAYER: "layer",
   OPERATION: "operation"
 };
-
+/**
+ * Proptypes template for layers
+ */
 export const LayerShape = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired
 };
-/*
-const InputValuesShape = {
-  inputName: PropTypes.string.isRequired,
-  defaultInput: PropTypes.any,
-  inputType: PropTypes.string
-};
-*/
+/**
+ * Proptypes template for operations
+ */
 export const OperationShape = {
   name: PropTypes.string.isRequired,
   inputLayers: PropTypes.number.isRequired
-  //inputValues: PropTypes.arrayOf(PropTypes.shape(InputValuesShape)),
-  //script: PropTypes.string.isRequired
 };
-
+/**
+ * Object of string containing all valid inputtypes of user data
+ */
 export const InputTypes = {
   number: "number",
   boolean: "boolean",
   string: "string"
-};
-export const Actions = {
-  delete: "delete",
-  zoom: "zoom",
-  properties: "properties"
 };

@@ -1,7 +1,3 @@
-/**
- * Created by Hermann
- * Class the sidebar. Contains the layers, the operations and the upload file button
- */
 import React, { Component } from "react";
 import LayerList from "./layerlist";
 import Geoprocessing from "./geoprocessing";
@@ -10,12 +6,15 @@ import "./css/sidebar.css";
 import PropTypes from "prop-types";
 import { LayerShape } from "./util/constants";
 
+/**
+ * Class the sidebar. Contains the layers, the operations and the upload file button
+ */
 class SideBar extends Component {
   /**
    * Render function.
-   * Contains area for processing functions
-   * area for layers
-   * area for uploading files
+   * Contains list of processing functions
+   * List of layers
+   * Area for uploading files
    */
   render() {
     return (

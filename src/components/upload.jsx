@@ -1,21 +1,16 @@
-/**
- * Created by Hermann
- * Class for the upload button. Can upload geoJSON, GML and Shape
- * Must send file to App class, must transform files
- */
-
 import React, { Component } from "react";
 import Dropzone from "react-dropzone";
 import "./css/sidebar.css";
 import { ACCEPTED_FILE_TYPES, SHAPE_FORMATS } from "./util/constants.js";
 import PropTypes from "prop-types";
 
-const shpWorker = "./fileworkers/shapeworker.js";
-const gmlWorker = "./fileworkers/gmlworker.js";
-
+/**
+ * Class for the upload button. Can upload geoJSON files
+ */
 class Upload extends Component {
   /**
-   * Checks file type and chooses convertion function
+   * Checks file type and chooses convertion function.
+   * Can convert geoJSON, possibility for adding GML and Shape later
    * @param files, all input files from user
    */
   handleUpload = files => {
@@ -38,25 +33,14 @@ class Upload extends Component {
         }
       }
     });
-    this.convertFiles(shapeFiles, shpWorker);
-    this.convertFiles(gmlFiles, gmlWorker);
     this.props.onUpload(geoJsonFiles);
   };
 
   /**
-   * Converts files using worker script from input
+   * Render function
+   * Contains a dropzone. Can either be clicked to open field upload dialogue,
+   * or can drop files over
    */
-  convertFiles = (files, workerpath) => {
-    if (files.length === 0) {
-      return;
-    }
-    const worker = new Worker(workerpath);
-    worker.postMessage(files);
-    worker.onmessage = function(e) {
-      this.props.onUpload(e.data);
-    };
-  };
-
   render() {
     return (
       <div>
@@ -83,8 +67,7 @@ Upload.propTypes = {
   shapeFiles: PropTypes.array,
   geoJsonFiles: PropTypes.array,
   ACCEPTED_FILE_TYPES: PropTypes.string,
-  SHAPE_FORMATS: PropTypes.array,
-  worker: PropTypes.instanceOf(Worker)
+  SHAPE_FORMATS: PropTypes.array
 };
 
 export default Upload;

@@ -1,16 +1,15 @@
-/**
- * Created by Hermann
- * Class for listing all layers in the sidebar. Contains all layers
- */
 import React, { Component } from "react";
 import Layer from "./layer";
 import "./css/sidebar.css";
 import PropTypes from "prop-types";
 import { LayerShape } from "./util/constants.js";
 
+/**
+ * Class for listing all layers in the sidebar. Contains all layers
+ */
 class LayerList extends Component {
   /**
-   * Render function.
+   * Render function
    * Contains title for layer list
    * All layers in a vertical list under the title
    */

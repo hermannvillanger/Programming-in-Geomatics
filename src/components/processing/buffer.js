@@ -1,12 +1,9 @@
-/**
- * Javacript class for creating buffer around geojson file
- * Takes layer file and buffer amount as input
- * returns buffered layer file
- * First input is array of layers, here 1
- * Second is array of inputs, here buffer distance and dissolve option
- */
 import { buffer, dissolve } from "@turf/turf";
-
+/**
+ * Adds a buffer around the input layer and returns the new buffered layer.
+ * @param {Array} layers Array of layers. Contains 1 layer in this operation
+ * @param {Array|Null} inputs Array of inputs. Containts 2 inputs in this operation
+ */
 export function bufferScript(layers, inputs) {
   let resultLayer = null;
   const layer = layers[0];
@@ -15,17 +12,16 @@ export function bufferScript(layers, inputs) {
   const name = layer.name + "-buffer-" + bufferValue + "m";
 
   let bufferLayer = layer.data;
-
+  //Create the buffer
   bufferLayer = buffer(bufferLayer, bufferValue, {
     units: "meters"
   });
-  //We remove the previous properties from the layer, as they do not make sense with the changed geometry,
-  //and to maintain consistence with the attribute selector
-  bufferLayer.features.forEach(feature => {
-    feature.properties = { geometryChanged: "geometryChanged" };
-  });
+  //If we dissolve, we also remove the previous properties, as the do not make sense with dissolved data
   if (shouldDissolve) {
     bufferLayer = dissolve(bufferLayer, { propertyName: "geometryChanged" });
+    bufferLayer.features.forEach(feature => {
+      feature.properties = { geometryChanged: "yes" };
+    });
   }
   resultLayer = { name: name, data: bufferLayer };
   return resultLayer;
