@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import "./css/sidebar.css";
 import { validateNumberInput } from "./util/support.js";
 const InputValues = {
-  name: "Name",
-  color: "Color",
-  opacity: "Opacity"
+  name: "Name: ",
+  color: "Color: ",
+  opacity: "Opacity: "
 };
 /**
  * Class for the popup menu which allows changing properties of a layer
@@ -34,7 +34,7 @@ class Properties extends Component {
   /**
    * Handle numerical input with min and max value.
    * Remove all non-numerical values from input, check if remainder is not empty.
-   * Is not empty, compare to min max, if empty set as empty string
+   * If not empty, compare to min and max, if empty set as empty string
    */
   handleRangeInput = (evt, inputName, defaultValue, min, max) => {
     let newValue = validateNumberInput(evt.target.value, defaultValue);
@@ -88,17 +88,17 @@ class Properties extends Component {
     return (
       <React.Fragment>
         {this.textInput(
-          "Name",
+          InputValues.name,
           this.state.inputs.get(InputValues.name),
           this.handleTextInput
         )}
         {this.colorInput(
-          "Color",
+          InputValues.color,
           this.state.inputs.get(InputValues.color),
           this.handleTextInput
         )}
         {this.rangeInput(
-          "Opacity",
+          InputValues.opacity,
           String(this.state.inputs.get(InputValues.opacity)).length > 0
             ? this.state.inputs.get(InputValues.opacity) * 100
             : "",
@@ -123,15 +123,15 @@ class Properties extends Component {
       </div>
     );
   };
-  rangeInput = (inputName, defaultValue, min, max, handleInput) => {
+  rangeInput = (inputName, defaultValue, min, max, onEdit) => {
     return (
       <div>
         {inputName}
         <input
           type="text"
-          style={{ width: "100px" }}
+          style={{ width: "50px" }}
           value={defaultValue}
-          onChange={evt => handleInput(evt, inputName, defaultValue, min, max)}
+          onChange={evt => onEdit(evt, inputName, defaultValue, min, max)}
         />
         {"%"}
       </div>
@@ -144,7 +144,7 @@ class Properties extends Component {
         <input
           type="color"
           value={defaultValue}
-          onChange={evt => onEdit(evt, inputName)}
+          onChange={evt => onEdit(evt, inputName, defaultValue)}
         />
       </div>
     );

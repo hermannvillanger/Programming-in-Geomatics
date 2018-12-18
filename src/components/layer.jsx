@@ -5,9 +5,6 @@ import "./css/sidebar.css";
 import "./css/contextmenu.css";
 import "./css/popup.css";
 
-import Popup from "reactjs-popup";
-import Properties from "./layerproperties";
-
 import flow from "lodash/flow";
 import PropTypes from "prop-types";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
@@ -69,16 +66,6 @@ function collectSource(connect, monitor) {
  * Class for visualizing the geojson layer in the sidebar
  */
 class Layer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { openModal: false };
-  }
-  openProperties = () => {
-    this.setState({ openModal: true });
-  };
-  closeProperties = () => {
-    this.setState({ openModal: false });
-  };
   /**
    * Method to decide which item was clicked and perform corresponding action
    */
@@ -88,7 +75,7 @@ class Layer extends Component {
     } else if (action === Actions.zoom) {
       this.props.onZoom(this.props.layer.id);
     } else if (action === Actions.properties) {
-      this.openProperties();
+      this.props.openPopup(this.props.layer);
     }
   };
   /**
@@ -130,8 +117,7 @@ class Layer extends Component {
   };
   /**
    * Render function
-   * Contains popup with layer properties
-   * Right click menu with options
+   * Contains right click menu with options
    * Name of layer
    * Square with color of layer
    * Checkbox for toggling visibility
@@ -154,19 +140,6 @@ class Layer extends Component {
               : "rgb(217, 217, 217)"
           }}
         >
-          <Popup
-            open={this.state.openModal}
-            modal
-            onClose={this.closeProperties}
-          >
-            <Properties
-              layer={this.props.layer}
-              style={this.props.style}
-              onNameChange={this.props.onNameChange}
-              onStyleChange={this.props.onStyleChange}
-              onDialogueFinished={this.closeProperties}
-            />
-          </Popup>
           <ContextMenuTrigger
             id={this.props.index.toString()}
             holdToDisplay={-1}

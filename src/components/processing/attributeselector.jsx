@@ -8,12 +8,12 @@ import deleteIcon from "../../images/icondelete.svg";
  * The ways property values can be compared when selecting data from layerfiles.
  */
 export const ComparisonMethods = {
-  equal: "equal to",
-  notEqual: "not equal to",
-  greater: "greater than",
-  less: "less than",
-  greaterEqual: "greater or equal to",
-  lessEqual: "less or equal to"
+  equal: "is Equal to",
+  notEqual: "is not Equal to",
+  greater: "is Greater than",
+  less: "is Less than",
+  greaterEqual: "is Greater or Equal to",
+  lessEqual: "is Less or Equal to"
 };
 /**
  * The datatypes in the three drop down menus
@@ -39,7 +39,8 @@ class AttributeSelector extends Component {
       filters: [],
       properties: {},
       dataTypes: new Map(),
-      processing: false
+      processing: false,
+      name: ""
     };
   }
   /**
@@ -94,7 +95,8 @@ class AttributeSelector extends Component {
     });
   };
   /**
-   * Goes through the filters the user has chosen and creates a new layer based on them
+   * Goes through the filters the user has chosen and creates a new layer based on them.
+   * If the user has entered a name, it is added to the new layer
    */
   onExecute = () => {
     const layer = this.props.layers[0];
@@ -106,7 +108,8 @@ class AttributeSelector extends Component {
         data.features.push(feature);
       }
     }
-    const newName = "sp-" + layer.name;
+    let newName = this.state.name;
+    newName = newName.length > 0 ? newName : "sp-" + layer.name;
     const extractedLayer = { name: newName, data: data };
     this.props.onExecute(extractedLayer);
   };
@@ -125,7 +128,6 @@ class AttributeSelector extends Component {
   };
   /**
    * Compares the filter value to the inputvalue using the comparison method.
-   * Note: we are comparing 'value' to 'filter.value'
    */
   fulfillCriteria = (filter, value) => {
     switch (filter.operator) {
@@ -230,8 +232,9 @@ class AttributeSelector extends Component {
   };
 
   /**
-   * For selecting data from a layer.
-   * TODO: Add input field for new name
+   * Creates 3 drop down menus for filtering data from a layer.
+   * Menu for Attribute Property, Operator and Value,
+   * plus button for deleting the filter
    */
   createSelectFields = () => {
     const selectFields = [];
@@ -266,14 +269,13 @@ class AttributeSelector extends Component {
             alt=""
             onClick={() => this.deleteSelection(position)}
           />
-          {/*TODO: Add image with + sign, for adding filters*/}
         </div>
       );
     });
     return selectFields;
   };
   /**
-   * Creates drop down menu with options from 'valueChoices
+   * Creates drop down menu with options from 'valueChoices'
    */
   createSelectField = (valueChoices, defaultChoice, type, pos) => {
     return (
@@ -290,15 +292,31 @@ class AttributeSelector extends Component {
       </select>
     );
   };
+  handleNameChange = event => {
+    const name = event.target.value;
+    this.setState({ name: name });
+  };
+
   /**
    * Render function
-   * Contains fields for filtering layer data
+   * Contains field for giving a name to the new layer
+   * Fields for filtering layer data
    * Button for adding new filters
    * Cancel button and start button
    */
   render() {
     return (
       <div>
+        <span>Name of new layer: </span>
+        <input
+          type={"text"}
+          value={this.state.name}
+          onChange={event => this.handleNameChange(event)}
+        />
+        <span>
+          <br />
+          Filters:
+        </span>
         {this.createSelectFields()}
         <button onClick={this.addSelectField} disabled={this.state.processing}>
           Add filter
@@ -306,7 +324,10 @@ class AttributeSelector extends Component {
         <button onClick={this.onCancel} disabled={this.state.processing}>
           Cancel
         </button>
-        <button onClick={this.onExecute} disabled={this.state.processing}>
+        <button
+          onClick={this.onExecute}
+          disabled={this.state.processing || this.state.filters.length === 0}
+        >
           Start
         </button>
       </div>

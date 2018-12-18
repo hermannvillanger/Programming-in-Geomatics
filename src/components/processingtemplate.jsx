@@ -241,7 +241,7 @@ class ProcessingTemplate extends Component {
     if (layer !== null) {
       this.props.onProcessingDone(layer);
     } else {
-      alert("Processing area is empty");
+      alert("The processed area is empty");
     }
     this.handleReset();
   };
@@ -251,10 +251,10 @@ class ProcessingTemplate extends Component {
 
   /**
    * Render function
+   * The popup is only created if this type of operation needs a seperate window
    * Creates layer and inputfields based on operation specifications
    * Creates reset button and start button for processing. Start button is greyed out if
    * a process is ongoing.
-   * The popup is only created if the type of operation needs a seperate window
    */
   render() {
     const { listOpen, popup } = this.props;
@@ -266,14 +266,12 @@ class ProcessingTemplate extends Component {
           modal
           onClose={this.closePopup}
         >
-          {
-            <PopupComponent
-              layers={this.state.layers}
-              inputs={this.state.inputs}
-              onExecute={this.processFinished}
-              onClose={this.closePopup}
-            />
-          }
+          <PopupComponent
+            layers={this.state.layers}
+            inputs={this.state.inputs}
+            onExecute={this.processFinished}
+            onClose={this.closePopup}
+          />
         </Popup>
         <div onClick={() => this.props.onToggle(this.props.operation.name)}>
           {this.props.operation.name}
