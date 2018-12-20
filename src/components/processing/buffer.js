@@ -1,4 +1,4 @@
-import { buffer, dissolve } from "@turf/turf";
+import { buffer, union } from "@turf/turf";
 /**
  * Adds a buffer around the input layer and returns the new buffered layer.
  * @param {Array} layers Array of layers. Contains 1 layer in this operation
@@ -12,17 +12,20 @@ export function bufferScript(layers, inputs) {
   const name = layer.name + "-buffer-" + bufferValue + "m";
 
   let bufferLayer = layer.data;
-  //Create the buffer
   bufferLayer = buffer(bufferLayer, bufferValue, {
     units: "meters"
   });
-  //If we dissolve, we also remove the previous properties, as the do not make sense with dissolved data
+  //Take the union of all features in the layer and remove the previous properties,
+  //as the do not make sense with dissolved data
   if (shouldDissolve) {
-    bufferLayer = dissolve(bufferLayer, { propertyName: "geometryChanged" });
-    bufferLayer.features.forEach(feature => {
-      feature.properties = { geometryChanged: "yes" };
-    });
+    let dissolvedFeature = Object.assign({}, bufferLayer.features[0]);
+    for (let i = 1; i < bufferLayer.features.length; i++) {
+      dissolvedFeature = union(dissolvedFeature, bufferLayer.features[i]);
+    }
+    dissolvedFeature.properties = { geometryChanged: "yes" };
+    bufferLayer.features = [dissolvedFeature];
   }
+
   resultLayer = { name: name, data: bufferLayer };
   return resultLayer;
 }

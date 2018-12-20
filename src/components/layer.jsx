@@ -116,6 +116,17 @@ class Layer extends Component {
     );
   };
   /**
+   * Reduce too long layer names when shown to the user
+   */
+  clipName = () => {
+    let name = this.props.layer.name;
+    if (name.length > 24) {
+      name = name.substring(0, 25);
+      name = name.concat("...");
+    }
+    return name;
+  };
+  /**
    * Render function
    * Contains right click menu with options
    * Name of layer
@@ -144,7 +155,7 @@ class Layer extends Component {
             id={this.props.index.toString()}
             holdToDisplay={-1}
           >
-            <span>{this.props.layer.name}</span>
+            <span>{this.clipName()}</span>
             {/*FIXME: Overflow of name/Size */}
             <div
               style={{

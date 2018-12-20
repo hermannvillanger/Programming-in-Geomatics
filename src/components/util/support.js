@@ -1,4 +1,7 @@
 /**
+ * Class for support functions
+ */
+/**
  * Returns the index and content of the object with matching id in arraylist
  * @param {*} id
  * @param {*} arraylist

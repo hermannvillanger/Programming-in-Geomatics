@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { InputTypes } from "../util/constants";
-import "../css/processing.css";
 import "../css/sidebar.css";
 import deleteIcon from "../../images/icondelete.svg";
 
