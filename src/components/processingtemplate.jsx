@@ -297,7 +297,7 @@ class ProcessingTemplate extends Component {
               onClick={() => this.handleReset()}
               disabled={this.state.processing}
             >
-              Reset
+              Clear
             </button>
             <button
               onClick={() => this.processingStart()}

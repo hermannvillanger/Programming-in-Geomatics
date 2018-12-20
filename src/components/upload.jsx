@@ -52,7 +52,7 @@ class Upload extends Component {
           }}
         >
           <div>
-            Drag and drop, or click to upload files here. Only geojson
+            Click to upload files. Only geojson files
             {/*, gml and shapefiles*/} can be uploaded
           </div>
         </Dropzone>
