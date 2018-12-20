@@ -4,16 +4,16 @@ self.__precacheManifest = [
     "url": "/Programming-in-Geomatics/static/media/iconsettings.674d9d35.svg"
   },
   {
-    "revision": "2ed6fb7b31d3afc54ba4",
-    "url": "/Programming-in-Geomatics/static/css/main.17aa6c2d.chunk.css"
+    "revision": "2fabd2f63b00cc7be684",
+    "url": "/Programming-in-Geomatics/static/css/main.79464b7a.chunk.css"
   },
   {
     "revision": "679a0c198d45e5e33910a3fe91b6af43",
     "url": "/Programming-in-Geomatics/static/media/difference.679a0c19.png"
   },
   {
-    "revision": "f90ef2eb28b481473b25",
-    "url": "/Programming-in-Geomatics/static/js/1.f90ef2eb.chunk.js"
+    "revision": "7718573a4151e6404be0",
+    "url": "/Programming-in-Geomatics/static/js/1.7718573a.chunk.js"
   },
   {
     "revision": "ef8e8ee18aaa9a214d9f",
@@ -28,8 +28,8 @@ self.__precacheManifest = [
     "url": "/Programming-in-Geomatics/static/media/iconzoom.c135a649.svg"
   },
   {
-    "revision": "2ed6fb7b31d3afc54ba4",
-    "url": "/Programming-in-Geomatics/static/js/main.2ed6fb7b.chunk.js"
+    "revision": "2fabd2f63b00cc7be684",
+    "url": "/Programming-in-Geomatics/static/js/main.2fabd2f6.chunk.js"
   },
   {
     "revision": "7d03c90cd7d10f7ac3b33aee85378a97",
@@ -48,11 +48,11 @@ self.__precacheManifest = [
     "url": "/Programming-in-Geomatics/static/media/union.2f066b4c.png"
   },
   {
-    "revision": "f90ef2eb28b481473b25",
-    "url": "/Programming-in-Geomatics/static/css/1.322989c0.chunk.css"
+    "revision": "7718573a4151e6404be0",
+    "url": "/Programming-in-Geomatics/static/css/1.6b2330a1.chunk.css"
   },
   {
-    "revision": "cafc804d3ab859151e4f6abb8258e17a",
+    "revision": "14475e1fff68b19203121c17d785077f",
     "url": "/Programming-in-Geomatics/index.html"
   }
 ];
