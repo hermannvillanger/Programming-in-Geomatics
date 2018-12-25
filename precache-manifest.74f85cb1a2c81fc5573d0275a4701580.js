@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/Programming-in-Geomatics/static/media/iconsettings.674d9d35.svg"
   },
   {
-    "revision": "2fabd2f63b00cc7be684",
+    "revision": "3bfd89ee90cd84f185b8",
     "url": "/Programming-in-Geomatics/static/css/main.79464b7a.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = [
     "url": "/Programming-in-Geomatics/static/media/difference.679a0c19.png"
   },
   {
-    "revision": "7718573a4151e6404be0",
-    "url": "/Programming-in-Geomatics/static/js/1.7718573a.chunk.js"
+    "revision": "645c1f5d60db5f9c849d",
+    "url": "/Programming-in-Geomatics/static/js/1.645c1f5d.chunk.js"
   },
   {
     "revision": "ef8e8ee18aaa9a214d9f",
@@ -28,8 +28,8 @@ self.__precacheManifest = [
     "url": "/Programming-in-Geomatics/static/media/iconzoom.c135a649.svg"
   },
   {
-    "revision": "2fabd2f63b00cc7be684",
-    "url": "/Programming-in-Geomatics/static/js/main.2fabd2f6.chunk.js"
+    "revision": "3bfd89ee90cd84f185b8",
+    "url": "/Programming-in-Geomatics/static/js/main.3bfd89ee.chunk.js"
   },
   {
     "revision": "7d03c90cd7d10f7ac3b33aee85378a97",
@@ -48,11 +48,11 @@ self.__precacheManifest = [
     "url": "/Programming-in-Geomatics/static/media/union.2f066b4c.png"
   },
   {
-    "revision": "7718573a4151e6404be0",
+    "revision": "645c1f5d60db5f9c849d",
     "url": "/Programming-in-Geomatics/static/css/1.6b2330a1.chunk.css"
   },
   {
-    "revision": "14475e1fff68b19203121c17d785077f",
+    "revision": "c9930ce34ff9065e8a39788bf546c42f",
     "url": "/Programming-in-Geomatics/index.html"
   }
 ];

@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/Programming-in-Geomatics/precache-manifest.ac80e9c5c9382ff8f064fa9a41106904.js"
+  "/Programming-in-Geomatics/precache-manifest.74f85cb1a2c81fc5573d0275a4701580.js"
 );
 
 workbox.clientsClaim();
