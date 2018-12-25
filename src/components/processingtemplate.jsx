@@ -273,7 +273,10 @@ class ProcessingTemplate extends Component {
             onClose={this.closePopup}
           />
         </Popup>
-        <div onClick={() => this.props.onToggle(this.props.operation.name)}>
+        <div
+          style={{ overflow: "auto" }}
+          onClick={() => this.props.onToggle(this.props.operation.name)}
+        >
           {this.props.operation.name}
           {this.props.operation.info && (
             <Popup

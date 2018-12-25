@@ -11,12 +11,16 @@ import { union, buffer } from "@turf/turf";
  * @param {Array|Null} inputs Array of inputs. Null in this operation
  */
 export function unionScript(layers, inputs) {
-  let resultLayer = null;
   const layer1 = layers[0];
   const layer2 = layers[1];
-  const name = layer1.name + "-union-" + layer2.name;
+  const name = layer1.name + "-Uni-" + layer2.name;
+
+  const resultLayer = { name: name };
+  const resultData = Object.assign({}, layer1.data);
+
   let buffer1 = buffer(layer1.data, 0.1, { units: "meters" });
   let buffer2 = buffer(layer2.data, 0.1, { units: "meters" });
+
   //Merge all features in layer1
   let feature1 = Object.assign({}, buffer1.features[0]);
   for (let i = 1; i < buffer1.features.length; i++) {
@@ -28,7 +32,7 @@ export function unionScript(layers, inputs) {
     feature2 = union(feature2, buffer2.features[i]);
   }
   //Return the union of the two merged layers
-  const unionLayer = union(feature1, feature2);
-  resultLayer = { name: name, data: unionLayer };
+  resultData.features = [union(feature1, feature2)];
+  resultLayer.data = resultData;
   return resultLayer;
 }

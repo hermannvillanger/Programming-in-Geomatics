@@ -108,7 +108,7 @@ class AttributeSelector extends Component {
       }
     }
     let newName = this.state.name;
-    newName = newName.length > 0 ? newName : "sp-" + layer.name;
+    newName = newName.length > 0 ? newName : "SP-" + layer.name;
     const extractedLayer = { name: newName, data: data };
     this.props.onExecute(extractedLayer);
   };

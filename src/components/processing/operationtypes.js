@@ -27,8 +27,8 @@ export const operations = [
     name: "Buffer",
     inputLayers: 1,
     inputValues: [
-      createInputValue("Buffer radius", 100, InputTypes.number),
-      createInputValue("Dissolve(slow)", false, InputTypes.boolean)
+      createInputValue("Buffer value", 100, InputTypes.number),
+      createInputValue("Dissolve (slow)", false, InputTypes.boolean)
     ],
     script: bufferScript,
     info: bufferImg

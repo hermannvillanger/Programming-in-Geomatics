@@ -12,31 +12,41 @@ import { difference, buffer } from "@turf/turf";
 export function differenceScript(layers, inputs) {
   const layer1 = layers[0];
   const layer2 = layers[1];
-  const name = layer1.name + "-difference-" + layer2.name;
+  const name = layer1.name + "-Diff-" + layer2.name;
+
   const resultLayer = { name: name };
   const resultData = Object.assign({}, layer1.data);
-  resultData.features = [];
+
+  //Perform buffer operation to transform data to polygons
   let buffer1 = buffer(layer1.data, 0.1, { units: "meters" });
   let buffer2 = buffer(layer2.data, 0.1, { units: "meters" });
-  /**
-   * For each feature in layer1, take the difference from all features in layer2.
-   * If the result is not null we add the difference to a new layer
-   */
-  for (let i = 0; i < buffer1.features.length; i++) {
-    let nextFeature = Object.assign({}, buffer1.features[i]);
-    for (let j = 0; j < buffer2.features.length; j++) {
-      nextFeature = difference(nextFeature, buffer2.features[j]);
+
+  resultData.features = layerDifference(buffer1.features, buffer2.features);
+
+  if (resultData.features.length === 0) {
+    return null;
+  } else {
+    resultLayer.data = resultData;
+    return resultLayer;
+  }
+}
+/**
+ * For each feature in features1, take the difference from all features in features2.
+ * If the result is not null we add the difference to a new feature list
+ */
+export function layerDifference(features1, features2) {
+  const newFeatures = [];
+  for (let i = 0; i < features1.length; i++) {
+    let nextFeature = Object.assign({}, features1[i]);
+    for (let j = 0; j < features2.length; j++) {
+      nextFeature = difference(nextFeature, features2[j]);
       if (nextFeature === null) {
         break;
       }
     }
     if (nextFeature !== null) {
-      resultData.features.push(nextFeature);
+      newFeatures.push(nextFeature);
     }
   }
-  if (!resultData.features[0]) {
-    return null;
-  }
-  resultLayer.data = resultData;
-  return resultLayer;
+  return newFeatures;
 }

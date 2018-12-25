@@ -22,9 +22,10 @@ const Actions = {
 };
 
 /**
- * Also must be dropped in processingfield. Use itemtypes operation for that
+ * For dragging the layer
  */
 const layerSource = {
+  //Contains the info of the dragged layer
   beginDrag(props) {
     const item = {
       draggedId: props.layer.id,
@@ -35,13 +36,16 @@ const layerSource = {
     return item;
   }
 };
+/**
+ * For dropping layers on each other and sorting the list of layers
+ */
 const layerTarget = {
-  //Cannot drop on the same layer
+  //Should not be able to drop on the same layer
   canDrop(props, monitor) {
     let { draggedId } = monitor.getItem();
     return draggedId !== props.layer.id;
   },
-  //App handles sorting of the layer list
+  //Move the layer to its new index in the layer list, 'App' handles the sorting
   drop(props, monitor) {
     if (!monitor.didDrop()) {
       let { draggedId } = monitor.getItem();
@@ -49,13 +53,18 @@ const layerTarget = {
     }
   }
 };
-
+/**
+ * Attributes used to make a field droppable
+ */
 function collectTarget(connect, monitor) {
   return {
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver()
   };
 }
+/**
+ * Attributes used to make a field draggable
+ */
 function collectSource(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
@@ -148,7 +157,8 @@ class Layer extends Component {
             opacity: isDragging ? 0 : 1,
             backgroundColor: isOver
               ? "rgb(120, 120, 120)"
-              : "rgb(217, 217, 217)"
+              : "rgb(217, 217, 217)",
+            overflow: "auto"
           }}
         >
           <ContextMenuTrigger
@@ -156,7 +166,6 @@ class Layer extends Component {
             holdToDisplay={-1}
           >
             <span>{this.clipName()}</span>
-            {/*FIXME: Overflow of name/Size */}
             <div
               style={{
                 height: "20px",

@@ -5,8 +5,11 @@ import { ItemTypes, LayerShape } from "./util/constants.js";
 import flow from "lodash/flow";
 import "./css/sidebar.css";
 
+/**
+ * For dragging the inputlayer.
+ */
 const operationSource = {
-  //The dragged item has id, name and data of layer
+  //Contains the info of the dragged inputlayer
   beginDrag(props) {
     const item = {
       draggedId: props.layer.id,
@@ -15,7 +18,7 @@ const operationSource = {
     };
     return item;
   },
-  //Can not drag if one one possible layer, or if no layer is present
+  //Can only drag inputfield if they contain a layer, and there are more than one inputfield
   canDrag(props) {
     if (props.inputLayers > 1) {
       return props.layer !== null;
@@ -23,8 +26,11 @@ const operationSource = {
     return false;
   }
 };
+/**
+ *For dropping layers in the inputfields, and changing the order of the layers
+ */
 const operationTarget = {
-  //Can drop if the field is empty, or if the layer has a different id from the dragged layer
+  //Can drop if the field is empty, or if the layer is different from the dragged layer
   canDrop(props, monitor) {
     if (props.layer === null) {
       return true;
@@ -32,7 +38,7 @@ const operationTarget = {
     const { draggedId } = monitor.getItem();
     return props.layer.id !== draggedId;
   },
-  //Template handles the drop logic in its handleDrop function
+  //When dropping a layer, 'ProcessingTemplate' handle assigning layers to fields
   drop(props, monitor) {
     if (!monitor.didDrop()) {
       const { draggedId, draggedName, draggedData } = monitor.getItem();
@@ -41,13 +47,18 @@ const operationTarget = {
     }
   }
 };
-
+/**
+ * Attributes used to make a field droppable
+ */
 function collectTarget(connect, monitor) {
   return {
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver()
   };
 }
+/**
+ * Attributes used to make a field draggable
+ */
 function collectSource(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
