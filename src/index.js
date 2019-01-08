@@ -1,3 +1,5 @@
+import "@babel/polyfill";
+import "indexeddb-getall-shim";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import ReactDOM from "react-dom";

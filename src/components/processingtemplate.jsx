@@ -285,7 +285,7 @@ class ProcessingTemplate extends Component {
               on="hover"
             >
               <img
-                style={{ width: "300px" }}
+                style={{ width: "350px" }}
                 src={this.props.operation.info}
                 alt=""
               />

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Dropzone from "react-dropzone";
 import "./css/sidebar.css";
-import { ACCEPTED_FILE_TYPES, SHAPE_FORMATS } from "./util/constants.js";
+import { ACCEPTED_FILE_TYPES } from "./util/constants.js";
 import PropTypes from "prop-types";
 
 /**
@@ -14,21 +14,19 @@ class Upload extends Component {
    * @param files, all input files from user
    */
   handleUpload = files => {
-    let shapeFiles = [];
-    let gmlFiles = [];
     let geoJsonFiles = [];
+    //let gmlFiles = [];
     files.forEach(file => {
       let filename = file.name.toLowerCase();
       if (filename.length > 0) {
         if (filename.endsWith(".geojson")) {
           geoJsonFiles.push(file);
-        } else if (filename.endsWith(".gml")) {
-          gmlFiles.push(file);
-        } else if (
-          SHAPE_FORMATS.filter(format => filename.endsWith(format)).length > 0
-        ) {
-          shapeFiles.push(file);
         } else {
+          /*
+        else if (filename.endsWith(".gml")) {
+          gmlFiles.push(file);
+        }
+        */
           alert("Not valid filetype: " + filename);
         }
       }
@@ -38,8 +36,7 @@ class Upload extends Component {
 
   /**
    * Render function
-   * Contains a dropzone. Can either be clicked to open field upload dialogue,
-   * or can drop files over
+   * Contains a file upload zone. Can be clicked to open field upload dialogue
    */
   render() {
     return (
@@ -51,10 +48,7 @@ class Upload extends Component {
             this.handleUpload(files);
           }}
         >
-          <div>
-            Click to upload files. Only geojson files
-            {/*, gml and shapefiles*/} can be uploaded
-          </div>
+          <span>Click to upload files. Only geojson files can be uploaded</span>
         </Dropzone>
       </div>
     );

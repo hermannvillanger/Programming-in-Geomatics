@@ -8,6 +8,7 @@ import bufferImg from "../../images/buffer.png";
 import intersectionImg from "../../images/intersection.png";
 import unionImg from "../../images/union.png";
 import differenceImg from "../../images/difference.png";
+import selectImg from "../../images/select.png";
 
 import AttributeSelector from "./attributeselector";
 
@@ -87,6 +88,6 @@ export const componentOperations = [
     inputLayers: 1,
     inputValues: null,
     popupComponent: AttributeSelector,
-    info: null
+    info: selectImg
   }
 ];

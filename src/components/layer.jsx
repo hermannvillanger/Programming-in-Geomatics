@@ -93,23 +93,17 @@ class Layer extends Component {
    */
   createContexMenu = () => {
     return (
-      <div>
-        <ContextMenu id={this.props.index.toString()}>
-          {this.createContexMenuItem(
-            Actions.properties,
-            "Properties",
-            settingsIcon
-          )}
-          <MenuItem divider />
-          {this.createContexMenuItem(Actions.zoom, "Zoom to layer", zoomIcon)}
-          <MenuItem divider />
-          {this.createContexMenuItem(
-            Actions.delete,
-            "Delete layer",
-            deleteIcon
-          )}
-        </ContextMenu>
-      </div>
+      <ContextMenu id={this.props.index.toString()}>
+        {this.createContexMenuItem(
+          Actions.properties,
+          "Properties",
+          settingsIcon
+        )}
+        <MenuItem divider />
+        {this.createContexMenuItem(Actions.zoom, "Zoom to layer", zoomIcon)}
+        <MenuItem divider />
+        {this.createContexMenuItem(Actions.delete, "Delete layer", deleteIcon)}
+      </ContextMenu>
     );
   };
   /**

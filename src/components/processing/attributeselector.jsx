@@ -239,6 +239,9 @@ class AttributeSelector extends Component {
     const selectFields = [];
     const properties = Object.keys(this.state.properties);
     this.state.filters.forEach((filter, position) => {
+      if (position > 0) {
+        selectFields.push(<span>and</span>);
+      }
       const comparators = this.getLegalComparators(
         this.state.dataTypes.get(filter.property)
       );
@@ -314,7 +317,7 @@ class AttributeSelector extends Component {
         />
         <span>
           <br />
-          Filters:
+          Select features from layer where:
         </span>
         {this.createSelectFields()}
         <button onClick={this.addSelectField} disabled={this.state.processing}>

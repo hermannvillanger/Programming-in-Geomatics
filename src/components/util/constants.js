@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 /**
  * Class for global constants
  */
-export const ACCEPTED_FILE_TYPES = ".geojson"; //, .gml, .dbf, .prj, .sbn, .sbx, .shp, .shx, .shp.xml";
+export const ACCEPTED_FILE_TYPES = ".geojson"; //,.zip, .gml, .dbf, .prj, .sbn, .sbx, .shp, .shx, .shp.xml";
 export const SHAPE_FORMATS = [
   ".shp",
   ".dbf",
