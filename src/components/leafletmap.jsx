@@ -11,8 +11,8 @@ import { LayerShape } from "./util/constants.js";
 class LeafletMap extends Component {
   state = {
     mapid: "mapid",
-    center: [63.42, 10.55],
-    zoom: 12
+    center: [63.42, 10.39],
+    zoom: 14
   };
 
   /**
